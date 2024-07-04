@@ -7,7 +7,7 @@ Dark Pattern Buster is a browser extension that helps users identify and counter
 1. Clone the repository:
 
    ```bash
-   git clone 
+   git clone https://github.com/aniket-2003-das/DPBH-Hackathon
    ```
 
 2. Install the required dependencies:
