@@ -1,0 +1,89 @@
+.container {
+
+    background: linear-gradient(#212121, #212121) padding-box,
+        linear-gradient(145deg, transparent 35%, #e81cff, #40c9ff) border-box;
+    border: 2px solid transparent;
+    padding: 32px 24px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    border-radius: 16px;
+}
+
+/* .container button:active {
+    scale: 0.95;
+} */
+
+.container .form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.container .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.container .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #717171;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.container .form-group input,
+.container .form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    background-color: transparent;
+    border: 1px solid #414141;
+}
+
+.container .form-group textarea {
+    height: 96px;
+    resize: none;
+}
+
+.container .form-group input::placeholder {
+    opacity: 0.5;
+}
+
+.container .form-group input:focus,
+.container .form-group textarea:focus {
+    outline: none;
+    border-color: #e81cff;
+}
+
+.container .form-submit-btn {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    align-self: flex-start;
+    font-family: Arial, sans-serif;
+    color: #717171;
+    font-weight: 600;
+    width: 40%;
+    background: #313131;
+    border: 1px solid #414141;
+    padding: 12px 16px;
+    font-size: inherit;
+    gap: 8px;
+    margin-top: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.container .form-submit-btn:hover {
+    background-color: #fff;
+    border-color: #fff;
+}

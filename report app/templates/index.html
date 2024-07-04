@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Text Extraction</title>
+    <link rel="stylesheet" href="static/style.css">
+
+</head>
+
+<body>
+    <div class="container form-container">
+        <h1>Image Text Extraction</h1>
+        <form class="form" id="uploadForm">
+            <div class="form-group">
+                <label for="fileInput">Upload Image:</label>
+                <input type="file" id="fileInput" accept="image/*" name="file" required>
+            </div>
+            <div class="form-group">
+                <label for="commentInput">Comment:</label>
+                <textarea id="commentInput" name="comment" placeholder="Comment"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="patternTypeInput">Pattern Type:</label>
+                <input type="text" id="patternTypeInput" name="patternType" placeholder="Pattern Type">
+            </div>
+            <div class="form-group">
+                <label for="whereInWebsiteInput">Where in Website:</label>
+                <input type="text" id="whereInWebsiteInput" name="whereInWebsite" placeholder="Where in website?">
+            </div>
+            <div class="form-group">
+                <label for="deceptiveInput">Deceptive:</label>
+                <input type="text" id="deceptiveInput" name="deceptive" placeholder="Deceptive?">
+            </div>
+            <div class="form-group">
+                <label for="websitePageInput">Website Page:</label>
+                <input type="text" id="websitePageInput" name="websitePage" placeholder="Website Page">
+            </div>
+            <div class="form-group">
+                <label for="patternCategoryInput">Pattern Category:</label>
+                <select id="patternCategoryInput" name="patternCategory" required>
+                    <option value="" disabled selected>Select Pattern Category</option>
+                    <option value="Sneaking">Sneaking</option>
+                    <option value="Urgency">Urgency</option>
+                    <option value="Misdirection">Misdirection</option>
+                    <option value="Social Proof">Social Proof</option>
+                    <option value="Scarcity">Scarcity</option>
+                    <option value="Obstruction">Obstruction</option>
+                    <option value="Forced Action">Forced Action</option>
+                </select>
+            </div>
+            <button type="submit" class="form-submit-btn">Upload Image and Submit Report</button>
+        </form>
+        <div id="loadingSpinner" class="loading-spinner"></div>
+        <div id="result"></div>
+        <div id="errorMessage" class="error-message"></div>
+
+    </div>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            let fileInput = document.getElementById('fileInput');
+            let file = fileInput.files[0];
+            if (file) {
+                let formData = new FormData();
+                formData.append('file', file);
+
+                formData.append('comment', document.getElementById('commentInput').value);
+                formData.append('patternType', document.getElementById('patternTypeInput').value);
+                formData.append('whereInWebsite', document.getElementById('whereInWebsiteInput').value);
+                formData.append('deceptive', document.getElementById('deceptiveInput').value);
+                formData.append('websitePage', document.getElementById('websitePageInput').value);
+                formData.append('patternCategory', document.getElementById('patternCategoryInput').value);
+                document.getElementById('loadingSpinner').style.display = 'block';
+                fetch('/extract-text', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to extract text');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+
+                        document.getElementById('result').innerText = data.extracted_text;
+                        document.getElementById('result').style.display = 'block';
+                        document.getElementById('errorMessage').style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('result').innerText = '';
+                        document.getElementById('errorMessage').innerText = 'An error occurred while extracting text. Please try again.';
+                        document.getElementById('errorMessage').style.display = 'block';
+                    })
+                    .finally(() => {
+                        document.getElementById('loadingSpinner').style.display = 'none';
+                    });
+            } else {
+                document.getElementById('result').style.display = 'none';
+                document.getElementById('errorMessage').innerText = 'Please select an image file.';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+
+        document.getElementById('reportButton').addEventListener('click', function () {
+            let patternString = document.getElementById('result').innerText.trim();
+            let patternCategory = document.getElementById('patternCategoryInput').value;
+
+
+            fetch('/report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    patternString: patternString,
+                    patternCategory: patternCategory
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to report');
+                    }
+                    alert('Report submitted successfully!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting the report. Please try again.');
+                });
+        });
+
+    </script>
+</body>
+
+</html>

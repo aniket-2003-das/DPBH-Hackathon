@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-n-Beyond</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
+    <link rel="stylesheet" href="css/popup.css" type="text/css">
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="stylesheet" href="css/crop.css" type="text/css">
+</head>
+
+<body>
+    <div class="modal-header">
+        <h1>All-n-Beyond</h1>
+    </div>
+    <div class="modal-content">
+        <div class="loading-spinner"></div>
+        <div class="container">
+            <p class="label">Total Patterns Bursted</p>
+            <p class="number">0</p>
+        </div>
+
+        <div class="checkbox-con toggle-css">
+            <label for="tog-cs" class="sr-only">Toggle CSS</label>
+            <input id="tog-cs" type="checkbox">
+        </div>
+        <button class="analyze-button" type="button" aria-label="Burst Patterns">Burst Patterns</button>
+        <button id="report" class="report-button" type="button" aria-label="Report">Report</button>
+        <ul>
+            <li>
+                <a href="http://127.0.0.1:8080/" target="_blank" rel="noopener">report with image?</a>
+            </li>
+        </ul>
+
+        <div id="cropperModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="cropperContainer"></div>
+                <button id="cropButton">Crop Image</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/popup.js"></script>
+    <script src="js/Crop.js"></script>
+</body>
+
+</html>

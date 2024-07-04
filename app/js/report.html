@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Dark Patterns</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+</head>
+
+<body>
+    <button id="report">Report Dark Patterns</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="canva.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const reportButton = document.getElementById('report');
+            reportButton.addEventListener('click', reportDarkPatterns);
+
+            function reportDarkPatterns() {
+                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                    const tab = tabs[0];
+                    chrome.tabs.captureVisibleTab(tab.windowId, { format: 'png' }, function (dataUrl) {
+                        const description = prompt('Enter description for the screenshot:');
+                        if (description === null) return;
+
+                        // Create an image element to load the captured screenshot
+                        const img = new Image();
+                        img.onload = function () {
+                            // Create a Cropper instance
+                            const cropper = new Cropper(img, {
+                                aspectRatio: NaN, // Allow free cropping
+                                viewMode: 1, // Show cropped area within the canvas
+                                zoomable: false, // Disable zooming
+                                crop(event) {
+                                    // Get the cropped canvas
+                                    const canvas = cropper.getCroppedCanvas();
+                                    // Convert canvas to data URL
+                                    const croppedDataUrl = canvas.toDataURL('image/png');
+
+                                    sendData(croppedDataUrl, description);
+                                }
+                            });
+
+                            // Set the source of the image to the captured screenshot
+                            cropper.replace(dataUrl);
+                        };
+
+                        // Set the source of the image to the captured screenshot
+                        img.src = dataUrl;
+                    });
+                });
+            }
+
+            function sendData(imageData, description) {
+                fetch('http://127.0.0.1:5000/report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: imageData,
+                        description: description
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error occurred while reporting. Please try again later.');
+                    });
+            }
+        });
+
+    </script>
+</body>
+
+</html>
